@@ -1,10 +1,10 @@
 const CACHE_NAME = 'mathrax-v1';
 
 const urlsToCache = [
-  '/mathrax/',
-  '/mathrax/manifest.json',
-  '/mathrax/icons/mathrax-192.png',
-  '/mathrax/icons/mathrax-512.png'
+  '/',
+  '/manifest.json',
+  '/icons/mathrax-192.png',
+  '/icons/mathrax-512.png'
 ];
 
 self.addEventListener('install', (event) => {

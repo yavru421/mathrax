@@ -15,8 +15,8 @@ module.exports = withPWA({
   output: 'export',
   poweredByHeader: false,
   compress: true,
-  basePath: '/mathrax',
-  assetPrefix: '/mathrax/',
+  basePath: '',  // Remove /mathrax
+  assetPrefix: '',  // Remove /mathrax/
   trailingSlash: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production'
