@@ -20,20 +20,23 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          npm install
+          npm install sharp
 
       - name: Build
-        run: npm run build && npm run export
+        run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: '/mathrax'
 
-      - name: Add .nojekyll file
-        run: touch ./out/.nojekyll
+      - name: Configure output
+        run: |
+          touch out/.nojekyll
+          cp -r public/* out/
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.1
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
           folder: out
+          branch: gh-pages
           clean: true

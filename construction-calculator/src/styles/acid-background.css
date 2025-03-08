@@ -1,8 +1,22 @@
+@supports (-webkit-touch-callout: none) {
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
+}
+
 body {
   background: linear-gradient(135deg, #ff00cc 0%, #333399 100%);
   background-size: 400% 400%;
   animation: gradientAnimation 4s ease infinite; /* Faster animation */
   overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+  height: 100%;
+}
+
+html {
+  height: -webkit-fill-available;
 }
 
 @keyframes gradientAnimation {

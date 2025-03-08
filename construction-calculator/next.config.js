@@ -2,22 +2,7 @@ const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-  buildExcludes: [/middleware-manifest\.json$/],
-  maximumFileSizeToCacheInBytes: 5000000,
-  runtimeCaching: [
-    {
-      urlPattern: /^https?.*/,
-      handler: 'NetworkFirst',
-      options: {
-        cacheName: 'offlineCache',
-        expiration: {
-          maxEntries: 200,
-          maxAgeSeconds: 24 * 60 * 60 // 24 hours
-        }
-      }
-    }
-  ]
+  disable: process.env.NODE_ENV === 'development'
 });
 
 module.exports = withPWA({
@@ -25,13 +10,15 @@ module.exports = withPWA({
   images: {
     domains: ['localhost'],
     minimumCacheTTL: 60,
+    unoptimized: true
   },
-  output: 'standalone',
+  output: 'export',
   poweredByHeader: false,
   compress: true,
   basePath: '/mathrax',
   assetPrefix: '/mathrax/',
-  images: {
-    unoptimized: true
+  trailingSlash: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production'
   }
 });
