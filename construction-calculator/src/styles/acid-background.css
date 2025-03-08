@@ -1,0 +1,53 @@
+body {
+  background: linear-gradient(135deg, #ff00cc 0%, #333399 100%);
+  background-size: 400% 400%;
+  animation: gradientAnimation 4s ease infinite; /* Faster animation */
+  overflow-x: hidden;
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.math-symbol {
+  position: fixed;
+  color: rgba(255, 255, 255, 0.1);
+  font-family: serif;
+  pointer-events: none;
+  animation: float 15s linear infinite;
+  z-index: 0;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.2; }
+  90% { opacity: 0.1; }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.brand-text {
+  position: fixed;
+  font-size: 180px; /* Bigger text */
+  font-weight: 900;
+  opacity: 0.15; /* More visible */
+  pointer-events: none;
+  z-index: 0;
+  color: #333399;
+  animation: brandAnimation 4s ease infinite; /* Faster animation */
+  text-shadow: 0 0 100px rgba(255, 255, 255, 0.2); /* Glow effect */
+  letter-spacing: -5px;
+}
+
+@keyframes brandAnimation {
+  0% { color: #333399; }
+  50% { color: #ff00cc; }
+  100% { color: #333399; }
+}

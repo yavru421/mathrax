@@ -1,0 +1,8 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0 0H512V512H0V0Z" fill="url(#grid)"/>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32H32V0Z" stroke="#3b82f6" stroke-opacity="0.1" fill="none"/>
+    </pattern>
+  </defs>
+</svg>
