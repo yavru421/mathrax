@@ -3,11 +3,14 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+    
     steps:
       - uses: actions/checkout@v2
 
@@ -30,6 +33,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # Add this line
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
           folder: out
+          clean: true
