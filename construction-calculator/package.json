@@ -1,0 +1,43 @@
+{
+  "name": "mathrax",
+  "version": "0.1.0-beta",
+  "private": true,
+  "author": "John Daniel Dondlinger",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rimraf .next out",
+    "export": "next build && next export",
+    "build:pwa": "next build && next export && npm run generate-pwa",
+    "generate-pwa": "next-pwa-icons --input ./public/logo.png --output ./public/icons"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@headlessui/react": "^1.7.17",
+    "@mui/icons-material": "^6.4.7",
+    "@mui/material": "^6.4.7",
+    "algebra.js": "^0.2.6",
+    "convert-units": "^2.3.4",
+    "fraction.js": "^4.3.7",
+    "framer-motion": "^10.16.4",
+    "mathjs": "^12.4.3",
+    "next": "^14.0.3",
+    "next-pwa": "^5.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.11.0",
+    "use-sound": "^4.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.53.0",
+    "eslint-config-next": "^14.0.3",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "rimraf": "^5.0.5",
+    "next-pwa-icons": "^1.1.0"
+  }
+}
