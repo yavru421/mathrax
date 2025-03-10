@@ -1,0 +1,92 @@
+{
+  "name": "imperial-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Imperial Measurement Calculator for Construction",
+  "author": "John Dondlinger",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "electron-dev": "concurrently \"npm run dev\" \"electron .\"",
+    "electron-build": "electron-builder",
+    "build:electron": "npm run build && electron-builder",
+    "build:pwa": "next build"
+  },
+  "main": "main.js",
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@headlessui/react": "^1.7.17",
+    "@mui/material": "^5.14.18",
+    "algebra.js": "^0.2.6",
+    "convert-units": "^2.3.4",
+    "fraction.js": "^4.3.0",
+    "framer-motion": "^10.16.5",
+    "mathjs": "^12.0.0",
+    "next": "^14.0.3",
+    "next-pwa": "^5.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "use-sound": "^4.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "cross-env": "^7.0.3",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "eslint": "^8.53.0",
+    "eslint-config-next": "^14.0.3",
+    "module": "^1.2.5",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.17"
+  },
+  "build": {
+    "appId": "com.imperial.calculator",
+    "productName": "Imperial Measurement Calculator",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/app/**/*",
+      "main.js",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icons/icon-512x512.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "public/icons/icon-512x512.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "public/icons/icon-512x512.png",
+      "category": "Utility"
+    }
+  }
+}
