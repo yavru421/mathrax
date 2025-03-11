@@ -2,14 +2,16 @@ const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development', // Only enable in production
 });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  distDir: 'dist/app',
-  images: { unoptimized: true }
+  output: 'export',  // Required for GitHub Pages
+  basePath: '/construction-calculator', // Match your repo name
+  assetPrefix: '/construction-calculator/', // Match your repo name
+  images: {
+    unoptimized: true // Required for static export
+  }
 };
 
 module.exports = withPWA(nextConfig);

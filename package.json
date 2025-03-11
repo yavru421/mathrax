@@ -6,13 +6,14 @@
   "author": "John Dondlinger",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node -e \"require('fs').writeFileSync('./out/.nojekyll', '')\"",
     "start": "next start",
     "lint": "next lint",
     "electron-dev": "concurrently \"npm run dev\" \"electron .\"",
     "electron-build": "electron-builder",
     "build:electron": "npm run build && electron-builder",
-    "build:pwa": "next build"
+    "build:pwa": "next build",
+    "deploy": "next build && touch out/.nojekyll"
   },
   "main": "main.js",
   "dependencies": {

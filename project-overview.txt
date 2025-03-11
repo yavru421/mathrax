@@ -1,24 +1,30 @@
 ## Project Structure
 /construction-calculator
-  ├── .next/
-  │   └── package.json (type: "commonjs")
-  ├── public/
-  │   └── manifest.json (PWA config)
+  ├── pages/           # Root-level pages directory for Next.js
+  │   ├── _app.js
+  │   ├── _document.js
+  │   └── index.js
+  ├── public/         # Static assets
+  │   ├── icons/
+  │   │   ├── mathrax-192.png
+  │   │   └── mathrax-512.png
+  │   ├── manifest.json
+  │   └── service-worker.js
   ├── src/
   │   ├── components/
-  │   │   ├── BasicCalculator.js (Main calculator with expression support)
-  │   │   ├── Calculator.js (Specialized construction calculator)
-  │   │   ├── InputField.js (Handles feet/inches input)
-  │   │   ├── ResultDisplay.js (Formats and displays results)
-  │   │   └── TabManager.js (Manages calculator modes)
-  │   ├── pages/
-  │   │   └── index.js (Main app page)
+  │   │   ├── BasicCalculator.js
+  │   │   ├── Calculator.js
+  │   │   ├── InputField.js
+  │   │   ├── ResultDisplay.js
+  │   │   └── TabManager.js
+  │   ├── contexts/
+  │   │   └── MemoryContext.js
   │   ├── styles/
-  │   │   └── globals.css (Tailwind imports)
+  │   │   └── globals.css
   │   └── utils/
-  │       ├── conversions.js (Feet/inches parsing)
-  │       ├── formulas.js (Construction calculations)
-  │       └── mathParser.js (Expression evaluation)
+  │       ├── conversions.js
+  │       ├── formulas.js
+  │       └── mathParser.js
   ├── next.config.js
   ├── package.json
   └── tailwind.config.js
