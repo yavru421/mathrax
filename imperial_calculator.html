@@ -7,61 +7,17 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .main-container {
-            display: flex;
-            width: 100%;
-            max-width: 1000px;
-            gap: 20px;
+            background-color: #f5f5f5;
         }
         
         .calculator-container {
             background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 500px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            flex: 1;
-        }
-        
-        .steps-container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .steps-content {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        
-        .step-item {
-            margin-bottom: 15px;
-            padding: 8px;
-            border-bottom: 1px dashed #ccc;
-            font-family: monospace;
-        }
-        
-        .final-result {
-            font-weight: bold;
-            color: green;
         }
         
         h1 {
@@ -70,1107 +26,115 @@
             margin-bottom: 20px;
         }
         
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ccc;
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #eee;
-            border: 1px solid #ccc;
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
-            margin-right: 5px;
-        }
-        
-        .tab.active {
-            background-color: #fff;
-            border-bottom: 1px solid #fff;
-            margin-bottom: -1px;
-            font-weight: bold;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .input-area {
-            margin-bottom: 15px;
-        }
-        
-        .input-field {
+        .calculator-input {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             font-size: 18px;
-            border: 2px solid #ccc;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
             border-radius: 5px;
-            margin-bottom: 10px;
             box-sizing: border-box;
         }
         
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .imperial-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        button {
-            padding: 15px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #e0e0e0;
-            transition: background-color 0.2s;
-        }
-        
-        button:hover {
-            background-color: #d0d0d0;
-        }
-        
-        button.operator {
-            background-color: #f0ad4e;
-            color: white;
-        }
-        
-        button.operator:hover {
-            background-color: #ec971f;
-        }
-        
-        button.equals {
-            background-color: #5cb85c;
-            color: white;
-            grid-column: span 2;
-        }
-        
-        button.equals:hover {
-            background-color: #449d44;
-        }
-        
-        button.clear {
-            background-color: #d9534f;
-            color: white;
-        }
-        
-        button.clear:hover {
-            background-color: #c9302c;
-        }
-        
-        button.imperial {
-            background-color: #5bc0de;
-            color: white;
-        }
-        
-        button.imperial:hover {
-            background-color: #31b0d5;
-        }
-        
-        .result {
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            min-height: 30px;
-        }
-        
-        .history {
-            max-height: 150px;
-            overflow-y: auto;
-            padding: 10px;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        
-        .history-item {
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-            cursor: pointer;
-        }
-        
-        .history-item:hover {
-            background-color: #e9e9e9;
-        }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .form-grid label {
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .form-grid input {
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-        }
-        
-        .form-grid .result-row {
-            grid-column: span 2;
-            margin-top: 10px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .triangle-diagram {
+        .calculator-output {
             width: 100%;
-            max-width: 250px;
-            margin: 0 auto 20px auto;
-            display: block;
+            min-height: 100px;
+            padding: 15px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="calculator-container">
-            <h1>Imperial Calculator</h1>
-            
-            <div class="tabs">
-                <div class="tab active" data-tab="feet-inches">Imperial Measurements</div>
-                <div class="tab" data-tab="pythagorean">Pythagorean</div>
-            </div>
-            
-            <div class="tab-content active" id="feet-inches">
-                <div class="input-area">
-                    <input type="text" class="input-field" id="feet-inches-input" placeholder="e.g., 5ft 6&1/2in + 2ft 3in">
-                </div>
-                
-                <div class="imperial-buttons">
-                    <button class="imperial" onclick="addToInput('ft')">ft</button>
-                    <button class="imperial" onclick="addToInput('in')">in</button>
-                    <button class="imperial" onclick="addToInput('&')">&</button>
-                    <button class="imperial" onclick="addToInput('/')">/</button>
-                    <button class="imperial" onclick="addToInput(' ')">Space</button>
-                </div>
-                
-                <div class="buttons">
-                    <button onclick="addToInput('7')">7</button>
-                    <button onclick="addToInput('8')">8</button>
-                    <button onclick="addToInput('9')">9</button>
-                    <button class="operator" onclick="addToInput('/')">/</button>
-                    
-                    <button onclick="addToInput('4')">4</button>
-                    <button onclick="addToInput('5')">5</button>
-                    <button onclick="addToInput('6')">6</button>
-                    <button class="operator" onclick="addToInput('*')">×</button>
-                    
-                    <button onclick="addToInput('1')">1</button>
-                    <button onclick="addToInput('2')">2</button>
-                    <button onclick="addToInput('3')">3</button>
-                    <button class="operator" onclick="addToInput('-')">-</button>
-                    
-                    <button onclick="addToInput('0')">0</button>
-                    <button onclick="addToInput('.')">.</button>
-                    <button class="clear" onclick="clearInput()">C</button>
-                    <button class="operator" onclick="addToInput('+')">+</button>
-                    
-                    <button onclick="addToInput('(')">(</button>
-                    <button onclick="addToInput(')')">)</button>
-                    <button class="equals" onclick="calculate()">Calculate</button>
-                </div>
-                
-                <div class="result" id="feet-inches-result">Result will appear here</div>
-                
-                <div class="history" id="feet-inches-history">
-                    <h3>History</h3>
-                    <!-- History items will be added here -->
-                </div>
-            </div>
-            
-            <div class="tab-content" id="pythagorean">
-                <div class="input-area">
-                    <h3>Pythagorean Theorem Calculator</h3>
-                    <p>Calculate the third side of a right triangle using a² + b² = c²</p>
-                    
-                    <svg class="triangle-diagram" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
-                        <polygon points="10,140 190,140 190,10" fill="none" stroke="black" stroke-width="2"/>
-                        <text x="95" y="150" font-size="16" text-anchor="middle">a</text>
-                        <text x="200" y="75" font-size="16" text-anchor="middle">b</text>
-                        <text x="100" y="70" font-size="16" text-anchor="middle">c</text>
-                        <path d="M 180,140 L 180,130 L 190,130" fill="none" stroke="black" stroke-width="1"/>
-                    </svg>
-                    
-                    <div class="form-grid">
-                        <label for="side-a">Side a:</label>
-                        <input type="text" id="side-a" placeholder="e.g., 3ft 4in or 5&1/2in">
-                        
-                        <label for="side-b">Side b:</label>
-                        <input type="text" id="side-b" placeholder="e.g., 4ft or 8&3/4in">
-                        
-                        <label for="side-c">Side c:</label>
-                        <input type="text" id="side-c" placeholder="Leave empty to calculate">
-                        
-                        <div class="result-row">
-                            <button class="equals" onclick="calculatePythagorean()">Calculate</button>
-                            <button class="clear" onclick="clearPythagorean()">Clear</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="result" id="pythagorean-result">Result will appear here</div>
-            </div>
-        </div>
+    <div class="calculator-container">
+        <h1>Imperial Calculator</h1>
         
-        <div class="steps-container">
-            <h1>Calculation Steps</h1>
-            <div class="steps-content" id="calculation-steps">
-                <div class="step-item">Enter an expression and press Calculate to see the steps.</div>
-            </div>
+        <input type="text" id="calculator-input" class="calculator-input" placeholder="Enter your calculation (e.g., 1' 2\" + 3' 4\")" autofocus>
+        
+        <div id="calculator-output" class="calculator-output">Results will appear here</div>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p>Enter calculations using feet and inches with the following format:</p>
+            <ul>
+                <li>Feet: Use the apostrophe symbol (e.g., 5')</li>
+                <li>Inches: Use the quote symbol (e.g., 3")</li>
+                <li>Example: 1' 2" + 3' 4"</li>
+                <li>Supported operations: +, -, *, /</li>
+            </ul>
         </div>
     </div>
 
     <script>
-        // Tab switching functionality
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.getAttribute('data-tab');
-                
-                // Remove active class from all tabs and contents
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
-                // Add active class to the clicked tab and its content
-                tab.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
-        
-        // Feet & Inches Calculator Logic
-        function addToInput(value) {
-            const input = document.getElementById('feet-inches-input');
-            input.value += value;
-            input.focus();
-        }
-        
-        function clearInput() {
-            document.getElementById('feet-inches-input').value = '';
-            document.getElementById('feet-inches-input').focus();
-        }
-        
-        function calculate() {
-            const input = document.getElementById('feet-inches-input').value;
-            
-            if (!input.trim()) {
-                document.getElementById('feet-inches-result').textContent = 'Please enter an expression';
-                clearSteps();
-                addStep("Please enter an expression");
-                return;
-            }
-            
-            try {
-                // Clear previous steps
-                clearSteps();
-                
-                // Add initial expression
-                addStep(`Original expression: ${input}`);
-                
-                // Process the expression
-                const parsedExpression = parseImperialExpression(input);
-                addStep(`Converted to inches: ${parsedExpression}`);
-                
-                // Evaluate the mathematical expression
-                const resultInches = evaluateMathExpression(parsedExpression);
-                addStep(`Evaluated result in inches: ${resultInches}`);
-                
-                // Convert the result back to feet and inches format
-                const result = formatImperialResult(resultInches);
-                addStep(`Formatted result: ${result}`, true);
-                
-                document.getElementById('feet-inches-result').textContent = result;
-                
-                // Add to history
-                addToHistory(input, result, 'feet-inches-history');
-            } catch (error) {
-                document.getElementById('feet-inches-result').textContent = `Error: ${error.message}`;
-                addStep(`Error: ${error.message}`);
-            }
-        }
-        
-        // Pythagorean Theorem Calculator Logic
-        function calculatePythagorean() {
-            clearSteps();
-            addStep("Pythagorean Theorem: a² + b² = c²");
-            
-            try {
-                const sideA = document.getElementById('side-a').value.trim();
-                const sideB = document.getElementById('side-b').value.trim();
-                const sideC = document.getElementById('side-c').value.trim();
-                
-                // Determine which side to calculate
-                if (sideC === "" && sideA !== "" && sideB !== "") {
-                    // Calculate c using a and b
-                    calculateSideC(sideA, sideB);
-                } else if (sideA === "" && sideB !== "" && sideC !== "") {
-                    // Calculate a using b and c
-                    calculateSideA(sideB, sideC);
-                } else if (sideB === "" && sideA !== "" && sideC !== "") {
-                    // Calculate b using a and c
-                    calculateSideB(sideA, sideC);
-                } else {
-                    throw new Error("Please provide exactly two sides to calculate the third side");
-                }
-            } catch (error) {
-                document.getElementById('pythagorean-result').textContent = `Error: ${error.message}`;
-                addStep(`Error: ${error.message}`);
-            }
-        }
-        
-        function clearPythagorean() {
-            document.getElementById('side-a').value = '';
-            document.getElementById('side-b').value = '';
-            document.getElementById('side-c').value = '';
-            document.getElementById('pythagorean-result').textContent = 'Result will appear here';
-            clearSteps();
-            addStep("Enter two sides to calculate the third side.");
-        }
-        
-        function calculateSideC(sideA, sideB) {
-            addStep(`Calculating hypotenuse (side c) using sides a = ${sideA} and b = ${sideB}`);
-            
-            // Convert both sides to inches
-            const inchesA = convertToInches(sideA);
-            addStep(`Side a in inches: ${inchesA}`);
-            
-            const inchesB = convertToInches(sideB);
-            addStep(`Side b in inches: ${inchesB}`);
-            
-            // Apply the Pythagorean theorem: c = √(a² + b²)
-            addStep(`Using formula: c = √(a² + b²) = √(${inchesA}² + ${inchesB}²)`);
-            
-            const squareA = inchesA * inchesA;
-            const squareB = inchesB * inchesB;
-            addStep(`a² = ${squareA}, b² = ${squareB}`);
-            
-            const sumSquares = squareA + squareB;
-            addStep(`a² + b² = ${sumSquares}`);
-            
-            const inchesC = Math.sqrt(sumSquares);
-            addStep(`c = √${sumSquares} = ${inchesC} inches`);
-            
-            // Format the result in feet and inches
-            const result = formatImperialResult(inchesC);
-            addStep(`Formatted result: ${result}`, true);
-            
-            document.getElementById('pythagorean-result').textContent = `Side c (hypotenuse) = ${result}`;
-        }
-        
-        function calculateSideA(sideB, sideC) {
-            addStep(`Calculating side a using side b = ${sideB} and hypotenuse c = ${sideC}`);
-            
-            // Convert both sides to inches
-            const inchesB = convertToInches(sideB);
-            addStep(`Side b in inches: ${inchesB}`);
-            
-            const inchesC = convertToInches(sideC);
-            addStep(`Side c in inches: ${inchesC}`);
-            
-            // Apply the Pythagorean theorem: a = √(c² - b²)
-            addStep(`Using formula: a = √(c² - b²) = √(${inchesC}² - ${inchesB}²)`);
-            
-            const squareC = inchesC * inchesC;
-            const squareB = inchesB * inchesB;
-            addStep(`c² = ${squareC}, b² = ${squareB}`);
-            
-            if (squareC <= squareB) {
-                throw new Error("The hypotenuse must be longer than either side");
-            }
-            
-            const diffSquares = squareC - squareB;
-            addStep(`c² - b² = ${diffSquares}`);
-            
-            const inchesA = Math.sqrt(diffSquares);
-            addStep(`a = √${diffSquares} = ${inchesA} inches`);
-            
-            // Format the result in feet and inches
-            const result = formatImperialResult(inchesA);
-            addStep(`Formatted result: ${result}`, true);
-            
-            document.getElementById('pythagorean-result').textContent = `Side a = ${result}`;
-        }
-        
-        function calculateSideB(sideA, sideC) {
-            addStep(`Calculating side b using side a = ${sideA} and hypotenuse c = ${sideC}`);
-            
-            // Convert both sides to inches
-            const inchesA = convertToInches(sideA);
-            addStep(`Side a in inches: ${inchesA}`);
-            
-            const inchesC = convertToInches(sideC);
-            addStep(`Side c in inches: ${inchesC}`);
-            
-            // Apply the Pythagorean theorem: b = √(c² - a²)
-            addStep(`Using formula: b = √(c² - a²) = √(${inchesC}² - ${inchesA}²)`);
-            
-            const squareC = inchesC * inchesC;
-            const squareA = inchesA * inchesA;
-            addStep(`c² = ${squareC}, a² = ${squareA}`);
-            
-            if (squareC <= squareA) {
-                throw new Error("The hypotenuse must be longer than either side");
-            }
-            
-            const diffSquares = squareC - squareA;
-            addStep(`c² - a² = ${diffSquares}`);
-            
-            const inchesB = Math.sqrt(diffSquares);
-            addStep(`b = √${diffSquares} = ${inchesB} inches`);
-            
-            // Format the result in feet and inches
-            const result = formatImperialResult(inchesB);
-            addStep(`Formatted result: ${result}`, true);
-            
-            document.getElementById('pythagorean-result').textContent = `Side b = ${result}`;
-        }
-        
-        function convertToInches(imperialMeasurement) {
-            // If the input is empty, throw an error
-            if (!imperialMeasurement) {
-                throw new Error("Measurement cannot be empty");
-            }
-            
-            addStep(`Converting "${imperialMeasurement}" to inches`);
-            
-            // Use the existing parsing logic to convert to inches
-            const parsedExpression = parseImperialExpression(imperialMeasurement, false);
-            addStep(`Parsed expression: ${parsedExpression}`);
-            
-            // Evaluate the mathematical expression
-            const inches = evaluateMathExpression(parsedExpression);
-            
-            return inches;
-        }
-        
-        function parseImperialExpression(expression, addSteps = true) {
-            // Replace feet and inches notation with calculations in inches
-            let parsed = expression;
-            const steps = [];
-            
-            // First handle mixed numbers with & notation (e.g., "6&1/2 in" -> "6 + 1/2 in")
-            parsed = parsed.replace(/(\d+)\&(\d+)\/(\d+)\s*in/gi, function(match, whole, numerator, denominator) {
-                const replacement = `(${whole}+${numerator}/${denominator}) in`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // First, handle fractional inches within imperial measurements
-            // Pattern: X ft Y&Z/W in -> (X*12 + Y + Z/W)
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\&(\d+)\/(\d+)\s*in/gi, function(match, feet, wholeInches, numerator, denominator) {
-                const replacement = `(${feet}*12 + ${wholeInches} + ${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Pattern: X ft Y Z/W in -> (X*12 + Y + Z/W)
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\s+(\d+)\/(\d+)\s*in/gi, function(match, feet, wholeInches, numerator, denominator) {
-                const replacement = `(${feet}*12 + ${wholeInches} + ${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Pattern: X ft Z/W in -> (X*12 + Z/W)
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\/(\d+)\s*in/gi, function(match, feet, numerator, denominator) {
-                const replacement = `(${feet}*12 + ${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Pattern: Z/W in -> (Z/W)
-            parsed = parsed.replace(/(\d+)\/(\d+)\s*in/gi, function(match, numerator, denominator) {
-                const replacement = `(${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Replace "X ft Y in" pattern
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\s*in/gi, function(match, feet, inches) {
-                const replacement = `(${feet}*12+${inches})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Replace "X ft" pattern
-            parsed = parsed.replace(/(\d+)\s*ft/gi, function(match, feet) {
-                const replacement = `(${feet}*12)`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Replace "X in" pattern
-            parsed = parsed.replace(/(\d+)\s*in/gi, function(match, inches) {
-                const replacement = `(${inches})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Convert any remaining mixed numbers with & notation (e.g., "6&1/2" -> "6 + 1/2")
-            parsed = parsed.replace(/(\d+)\&(\d+)\/(\d+)/g, function(match, whole, numerator, denominator) {
-                const replacement = `(${whole}+${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Now convert any remaining fractions to decimal for calculation
-            parsed = parsed.replace(/(\d+)\/(\d+)/g, function(match, numerator, denominator) {
-                const replacement = `(${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Add each step to the steps display if requested
-            if (addSteps) {
-                steps.forEach(step => addStep(step));
-            }
-            
-            return parsed;
-        }
-        
-        function evaluateMathExpression(expression) {
-            // Add step for the expression being evaluated
-            addStep(`Evaluating: ${expression}`);
-            
-            // Security check: allow fractions in the expression
-            if (!/^[0-9+\-*/().\s]*$/.test(expression)) {
-                throw new Error("Invalid characters in expression");
-            }
-            
-            // Use Function constructor to evaluate the expression (with security considerations)
-            try {
-                // Replace ** with Math.pow for safety
-                expression = expression.replace(/\*\*/g, 'Math.pow');
-                
-                // Create a function to evaluate the expression
-                const result = new Function(`return ${expression}`)();
-                
-                if (isNaN(result) || !isFinite(result)) {
-                    throw new Error("Invalid calculation result");
-                }
-                
-                return result;
-            } catch (error) {
-                throw new Error("Invalid expression: " + error.message);
-            }
-        }
-        
-        function formatImperialResult(inches) {
-            // Convert inches to feet and inches format with fraction support
-            const feet = Math.floor(inches / 12);
-            const totalInches = inches % 12;
-            
-            addStep(`Converting ${inches} inches to feet and inches`);
-            addStep(`Feet: ${feet}, Remaining inches: ${totalInches}`);
-            
-            // Round to avoid tiny decimal parts
-            const roundedInches = Math.round(totalInches * 1000) / 1000;
-            
-            // Convert decimal part of inches to fraction if needed
-            const wholeInches = Math.floor(roundedInches);
-            const decimalPart = roundedInches - wholeInches;
-            
-            addStep(`Whole inches: ${wholeInches}, Decimal part: ${decimalPart}`);
-            
-            let result;
-            // Format the result
-            if (feet === 0) {
-                if (decimalPart === 0) {
-                    result = `${wholeInches} in`;
-                } else {
-                    const fraction = decimalToFraction(decimalPart);
-                    addStep(`Converted decimal ${decimalPart} to fraction: ${fraction}`);
-                    if (wholeInches === 0) {
-                        result = `${fraction} in`;
-                    } else {
-                        result = `${wholeInches}&${fraction} in`;
-                    }
-                }
-            } else if (roundedInches === 0) {
-                result = `${feet} ft`;
-            } else {
-                if (decimalPart === 0) {
-                    result = `${feet} ft ${wholeInches} in`;
-                } else {
-                    const fraction = decimalToFraction(decimalPart);
-                    addStep(`Converted decimal ${decimalPart} to fraction: ${fraction}`);
-                    if (wholeInches === 0) {
-                        result = `${feet} ft ${fraction} in`;
-                    } else {
-                        result = `${feet} ft ${wholeInches}&${fraction} in`;
-                    }
-                }
-            }
-            
-            return result;
-        }
-        
-        function decimalToFraction(decimal) {
-            if (decimal === 0) return "0";
-            
-            addStep(`Finding fraction approximation for decimal: ${decimal}`);
-            
-            // Convert decimal to fraction with reasonable precision
-            const tolerance = 1.0E-6;
-            let numerator = 1;
-            let denominator = 1;
-            let bestNumerator = 1;
-            let bestDenominator = 1;
-            let bestError = Math.abs(decimal - numerator / denominator);
-            
-            // Use common fractions in construction (1/2, 1/4, 1/8, 1/16, 3/4, etc.)
-            // Try denominators that are powers of 2 up to 16
-            const commonDenominators = [2, 4, 8, 16];
-            
-            for (const d of commonDenominators) {
-                const n = Math.round(decimal * d);
-                const error = Math.abs(decimal - n / d);
-                
-                if (error < bestError) {
-                    bestNumerator = n;
-                    bestDenominator = d;
-                    bestError = error;
-                    addStep(`Better approximation found: ${n}/${d} (error: ${error.toFixed(8)})`);
-                }
-                
-                if (error < tolerance) {
-                    break;
-                }
-            }
-            
-            // If no good match with common fractions, try more precise approximation
-            if (bestError > tolerance) {
-                addStep(`Trying more precise approximation with higher denominators`);
-                const maxDenominator = 32;
-                
-                for (let d = 1; d <= maxDenominator; d++) {
-                    const n = Math.round(decimal * d);
-                    const error = Math.abs(decimal - n / d);
-                    
-                    if (error < bestError) {
-                        bestNumerator = n;
-                        bestDenominator = d;
-                        bestError = error;
-                        addStep(`Better approximation found: ${n}/${d} (error: ${error.toFixed(8)})`);
-                    }
-                    
-                    if (error < tolerance) {
-                        break;
-                    }
-                }
-            }
-            
-            // Simplify the fraction
-            const gcd = findGCD(bestNumerator, bestDenominator);
-            
-            if (gcd > 1) {
-                addStep(`Simplifying ${bestNumerator}/${bestDenominator} by dividing both by GCD: ${gcd}`);
-                bestNumerator = bestNumerator / gcd;
-                bestDenominator = bestDenominator / gcd;
-            }
-            
-            if (bestNumerator === 0) {
-                return "0";
-            } else {
-                return `${bestNumerator}/${bestDenominator}`;
-            }
-        }
-        
-        // History management
-        function addToHistory(input, result, historyElementId) {
-            const historyElement = document.getElementById(historyElementId);
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-            historyItem.textContent = `${input} = ${result}`;
-            historyItem.addEventListener('click', () => {
-                const inputElement = historyElementId === 'feet-inches-history' ? 
-                    document.getElementById('feet-inches-input') : 
-                    document.getElementById('fraction-input');
-                inputElement.value = input;
-            });
-            
-            historyElement.insertBefore(historyItem, historyElement.firstChild.nextSibling);
-            
-            // Limit history items
-            const historyItems = historyElement.getElementsByClassName('history-item');
-            if (historyItems.length > 10) {
-                historyElement.removeChild(historyItems[historyItems.length - 1]);
-            }
-        }
-        
-        // Imperial Expression Evaluation Logic
-        function evaluateImperialExpression(expression) {
-            // Step 1: Parse the expression, converting feet and inches to a common unit (inches)
-            const parsedExpression = parseImperialExpression(expression);
-            
-            // Step 2: Evaluate the mathematical expression
-            const resultInches = evaluateMathExpression(parsedExpression);
-            
-            // Step 3: Convert the result back to feet and inches format
-            return formatImperialResult(resultInches);
-        }
-        
-        function parseImperialExpression(expression) {
-            // Replace feet and inches notation with calculations in inches
-            let parsed = expression;
-            const steps = [];
-            
-            // First handle mixed numbers with & notation (e.g., "6&1/2 in" -> "6 + 1/2 in")
-            parsed = parsed.replace(/(\d+)\&(\d+)\/(\d+)\s*in/gi, function(match, whole, numerator, denominator) {
-                const replacement = `(${whole}+${numerator}/${denominator}) in`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // First, handle fractional inches within imperial measurements
-            // Pattern: X ft Y&Z/W in -> (X*12 + Y + Z/W)
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\&(\d+)\/(\d+)\s*in/gi, function(match, feet, wholeInches, numerator, denominator) {
-                const replacement = `(${feet}*12 + ${wholeInches} + ${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Pattern: X ft Y Z/W in -> (X*12 + Y + Z/W)
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\s+(\d+)\/(\d+)\s*in/gi, function(match, feet, wholeInches, numerator, denominator) {
-                const replacement = `(${feet}*12 + ${wholeInches} + ${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Pattern: X ft Z/W in -> (X*12 + Z/W)
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\/(\d+)\s*in/gi, function(match, feet, numerator, denominator) {
-                const replacement = `(${feet}*12 + ${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Pattern: Z/W in -> (Z/W)
-            parsed = parsed.replace(/(\d+)\/(\d+)\s*in/gi, function(match, numerator, denominator) {
-                const replacement = `(${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Replace "X ft Y in" pattern
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\s*in/gi, function(match, feet, inches) {
-                const replacement = `(${feet}*12+${inches})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Replace "X ft" pattern
-            parsed = parsed.replace(/(\d+)\s*ft/gi, function(match, feet) {
-                const replacement = `(${feet}*12)`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Replace "X in" pattern
-            parsed = parsed.replace(/(\d+)\s*in/gi, function(match, inches) {
-                const replacement = `(${inches})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Convert any remaining mixed numbers with & notation (e.g., "6&1/2" -> "6 + 1/2")
-            parsed = parsed.replace(/(\d+)\&(\d+)\/(\d+)/g, function(match, whole, numerator, denominator) {
-                const replacement = `(${whole}+${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Now convert any remaining fractions to decimal for calculation
-            parsed = parsed.replace(/(\d+)\/(\d+)/g, function(match, numerator, denominator) {
-                const replacement = `(${numerator}/${denominator})`;
-                steps.push(`Replaced "${match}" with "${replacement}"`);
-                return replacement;
-            });
-            
-            // Add each step to the steps display
-            steps.forEach(step => addStep(step));
-            
-            return parsed;
-        }
-        
-        function evaluateMathExpression(expression) {
-            // Add step for the expression being evaluated
-            addStep(`Evaluating: ${expression}`);
-            
-            // Security check: allow fractions in the expression
-            if (!/^[0-9+\-*/().\s]*$/.test(expression)) {
-                throw new Error("Invalid characters in expression");
-            }
-            
-            // Use Function constructor to evaluate the expression (with security considerations)
-            try {
-                // Replace ** with Math.pow for safety
-                expression = expression.replace(/\*\*/g, 'Math.pow');
-                
-                // Create a function to evaluate the expression
-                const result = new Function(`return ${expression}`)();
-                
-                if (isNaN(result) || !isFinite(result)) {
-                    throw new Error("Invalid calculation result");
-                }
-                
-                return result;
-            } catch (error) {
-                throw new Error("Invalid expression: " + error.message);
-            }
-        }
-        
-        function formatImperialResult(inches) {
-            // Convert inches to feet and inches format with fraction support
-            const feet = Math.floor(inches / 12);
-            const totalInches = inches % 12;
-            
-            addStep(`Converting ${inches} inches to feet and inches`);
-            addStep(`Feet: ${feet}, Remaining inches: ${totalInches}`);
-            
-            // Round to avoid tiny decimal parts
-            const roundedInches = Math.round(totalInches * 1000) / 1000;
-            
-            // Convert decimal part of inches to fraction if needed
-            const wholeInches = Math.floor(roundedInches);
-            const decimalPart = roundedInches - wholeInches;
-            
-            addStep(`Whole inches: ${wholeInches}, Decimal part: ${decimalPart}`);
-            
-            let result;
-            // Format the result
-            if (feet === 0) {
-                if (decimalPart === 0) {
-                    result = `${wholeInches} in`;
-                } else {
-                    const fraction = decimalToFraction(decimalPart);
-                    addStep(`Converted decimal ${decimalPart} to fraction: ${fraction}`);
-                    if (wholeInches === 0) {
-                        result = `${fraction} in`;
-                    } else {
-                        result = `${wholeInches}&${fraction} in`;
-                    }
-                }
-            } else if (roundedInches === 0) {
-                result = `${feet} ft`;
-            } else {
-                if (decimalPart === 0) {
-                    result = `${feet} ft ${wholeInches} in`;
-                } else {
-                    const fraction = decimalToFraction(decimalPart);
-                    addStep(`Converted decimal ${decimalPart} to fraction: ${fraction}`);
-                    if (wholeInches === 0) {
-                        result = `${feet} ft ${fraction} in`;
-                    } else {
-                        result = `${feet} ft ${wholeInches}&${fraction} in`;
-                    }
-                }
-            }
-            
-            return result;
-        }
-        
-        function decimalToFraction(decimal) {
-            if (decimal === 0) return "0";
-            
-            addStep(`Finding fraction approximation for decimal: ${decimal}`);
-            
-            // Convert decimal to fraction with reasonable precision
-            const tolerance = 1.0E-6;
-            let numerator = 1;
-            let denominator = 1;
-            let bestNumerator = 1;
-            let bestDenominator = 1;
-            let bestError = Math.abs(decimal - numerator / denominator);
-            
-            // Use common fractions in construction (1/2, 1/4, 1/8, 1/16, 3/4, etc.)
-            // Try denominators that are powers of 2 up to 16
-            const commonDenominators = [2, 4, 8, 16];
-            
-            for (const d of commonDenominators) {
-                const n = Math.round(decimal * d);
-                const error = Math.abs(decimal - n / d);
-                
-                if (error < bestError) {
-                    bestNumerator = n;
-                    bestDenominator = d;
-                    bestError = error;
-                    addStep(`Better approximation found: ${n}/${d} (error: ${error.toFixed(8)})`);
-                }
-                
-                if (error < tolerance) {
-                    break;
-                }
-            }
-            
-            // If no good match with common fractions, try more precise approximation
-            if (bestError > tolerance) {
-                addStep(`Trying more precise approximation with higher denominators`);
-                const maxDenominator = 32;
-                
-                for (let d = 1; d <= maxDenominator; d++) {
-                    const n = Math.round(decimal * d);
-                    const error = Math.abs(decimal - n / d);
-                    
-                    if (error < bestError) {
-                        bestNumerator = n;
-                        bestDenominator = d;
-                        bestError = error;
-                        addStep(`Better approximation found: ${n}/${d} (error: ${error.toFixed(8)})`);
-                    }
-                    
-                    if (error < tolerance) {
-                        break;
-                    }
-                }
-            }
-            
-            // Simplify the fraction
-            const gcd = findGCD(bestNumerator, bestDenominator);
-            
-            if (gcd > 1) {
-                addStep(`Simplifying ${bestNumerator}/${bestDenominator} by dividing both by GCD: ${gcd}`);
-                bestNumerator = bestNumerator / gcd;
-                bestDenominator = bestDenominator / gcd;
-            }
-            
-            if (bestNumerator === 0) {
-                return "0";
-            } else {
-                return `${bestNumerator}/${bestDenominator}`;
-            }
-        }
-        
-        function findGCD(a, b) {
-            // Euclidean algorithm to find greatest common divisor
-            a = Math.abs(a);
-            b = Math.abs(b);
-            
-            while (b > 0) {
-                const temp = b;
-                b = a % b;
-                a = temp;
-            }
-            
-            return a;
-        }
-        
-        // Steps display functions
-        function clearSteps() {
-            const stepsContainer = document.getElementById('calculation-steps');
-            stepsContainer.innerHTML = '';
-        }
-        
-        function addStep(stepText, isFinal = false) {
-            const stepsContainer = document.getElementById('calculation-steps');
-            const stepElement = document.createElement('div');
-            stepElement.className = isFinal ? 'step-item final-result' : 'step-item';
-            stepElement.textContent = stepText;
-            stepsContainer.appendChild(stepElement);
-        }
-        
-        // Add keyboard event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            // Add keyboard support for Imperial Calculator tab
-            const feetInchesInput = document.getElementById('feet-inches-input');
-            feetInchesInput.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    calculate();
-                }
+            const inputField = document.getElementById('calculator-input');
+            const outputField = document.getElementById('calculator-output');
+            
+            inputField.addEventListener('input', function() {
+                calculateImperial(this.value);
             });
             
-            // Add keyboard support for Pythagorean Calculator tab
-            const sideAInput = document.getElementById('side-a');
-            const sideBInput = document.getElementById('side-b');
-            const sideCInput = document.getElementById('side-c');
-            
-            sideAInput.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    if (sideAInput.value.trim() === '') {
-                        sideBInput.focus();
+            function calculateImperial(input) {
+                try {
+                    // Replace imperial measurements with decimal representations
+                    let processedInput = input.replace(/(\d+)'(?:\s*)?(\d+(?:\.\d+)?)?"/g, function(match, feet, inches) {
+                        const feetValue = parseInt(feet);
+                        const inchesValue = parseFloat(inches || 0);
+                        return `(${feetValue}*12+${inchesValue})`;
+                    });
+                    
+                    // Replace standalone feet values
+                    processedInput = processedInput.replace(/(\d+)'/g, '($1*12)');
+                    
+                    // Replace standalone inch values
+                    processedInput = processedInput.replace(/(\d+)"/g, '$1');
+                    
+                    // Evaluate the expression
+                    const totalInches = eval(processedInput);
+                    
+                    if (isNaN(totalInches)) {
+                        outputField.textContent = "Invalid expression";
+                        return;
+                    }
+                    
+                    // Convert back to feet and inches
+                    const feet = Math.floor(totalInches / 12);
+                    const inches = totalInches % 12;
+                    
+                    let result = "";
+                    if (feet > 0) {
+                        result += `${feet}'`;
+                    }
+                    if (inches > 0 || feet === 0) {
+                        if (feet > 0) result += " ";
+                        result += `${Math.round(inches * 1000) / 1000}"`;
+                    }
+                    
+                    // Show detailed calculation
+                    outputField.textContent = `Input: ${input}\nProcessed: ${processedInput}\nTotal inches: ${totalInches}\nResult: ${result}`;
+                } catch (error) {
+                    if (input.trim() === "") {
+                        outputField.textContent = "Results will appear here";
                     } else {
-                        sideBInput.focus();
+                        outputField.textContent = "Error in calculation. Please check your format.";
                     }
                 }
-            });
-            
-            sideBInput.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    if (sideBInput.value.trim() === '') {
-                        sideCInput.focus();
-                    } else {
-                        sideCInput.focus();
-                    }
-                }
-            });
-            
-            sideCInput.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    calculatePythagorean();
-                }
-            });
-            
-            // Global keyboard shortcuts
-            document.addEventListener('keydown', function(event) {
-                // Allow keyboard navigation between tabs with Ctrl+1 and Ctrl+2
-                if (event.ctrlKey && event.key === '1') {
-                    event.preventDefault();
-                    document.querySelector('.tab[data-tab="feet-inches"]').click();
-                } else if (event.ctrlKey && event.key === '2') {
-                    event.preventDefault();
-                    document.querySelector('.tab[data-tab="pythagorean"]').click();
-                }
-                
-                // Allow quick access to calculate with Ctrl+Enter from anywhere
-                if (event.ctrlKey && event.key === 'Enter') {
-                    event.preventDefault();
-                    if (document.getElementById('feet-inches').classList.contains('active')) {
-                        calculate();
-                    } else if (document.getElementById('pythagorean').classList.contains('active')) {
-                        calculatePythagorean();
-                    }
-                }
-                
-                // Quick clear with Escape key
-                if (event.key === 'Escape') {
-                    if (document.getElementById('feet-inches').classList.contains('active')) {
-                        clearInput();
-                    } else if (document.getElementById('pythagorean').classList.contains('active')) {
-                        clearPythagorean();
-                    }
-                }
-            });
+            }
         });
     </script>
-<footer style="text-align: center; margin-top: 30px; padding: 15px; background: #222; color: white; font-size: 14px; border-radius: 10px;">
-         <p>Imperial Calculator by <strong>John Daniel Dondlinger</strong></p>
-    <p>&copy; 2025. All Rights Reserved.</p>
-    <p>Developed for precise imperial unit calculations. Dondlinger General Contracting llc</p>
-</footer>
-
 </body>
 </html>
