@@ -202,7 +202,7 @@
     <div class="calculator">
         <div class="expression-container">
             <label for="expression">Expression</label>
-            <textarea id="expression" placeholder="Enter or build your expression here..."></textarea>
+            <textarea id="expression" placeholder="Enter calculations like: 5'6\" + 3&1/2\" or 2'6\" - 1/4\""></textarea>
         </div>
         
         <div class="number-pad">
@@ -352,7 +352,7 @@
                     if (wholeInches === 0) {
                         result += `${fractionStr}"`;
                     } else {
-                        result += `${wholeInches} ${fractionStr}"`;
+                        result += `${wholeInches}&${fractionStr}"`;
                     }
                 }
             }
@@ -390,6 +390,58 @@
                         num += input[i++];
                     }
                     tokens.push({ type: TOKEN_TYPES.NUMBER, value: parseFloat(num) });
+                    continue;
+                }
+                
+                // Handle measurements with & format like 6&1/2"
+                if (/[0-9]/.test(char) && i + 2 < input.length && input[i + 1] === '&') {
+                    let wholeNumber = '';
+                    // Get the whole number part
+                    while (i < input.length && /[0-9]/.test(input[i])) {
+                        wholeNumber += input[i++];
+                    }
+                    
+                    // Skip the & character
+                    if (i < input.length && input[i] === '&') {
+                        i++;
+                    } else {
+                        // This isn't an & format, so revert and try other patterns
+                        i -= wholeNumber.length;
+                        continue;
+                    }
+                    
+                    // Parse the fraction part
+                    let numerator = '';
+                    let denominator = '';
+                    
+                    // Get numerator
+                    while (i < input.length && /[0-9]/.test(input[i])) {
+                        numerator += input[i++];
+                    }
+                    
+                    // Skip the / character
+                    if (i < input.length && input[i] === '/') {
+                        i++;
+                    } else {
+                        throw new Error(`Invalid fraction format after &`);
+                    }
+                    
+                    // Get denominator
+                    while (i < input.length && /[0-9]/.test(input[i])) {
+                        denominator += input[i++];
+                    }
+                    
+                    // Skip the " character if present
+                    if (i < input.length && input[i] === '"') {
+                        i++;
+                    }
+                    
+                    // Convert to number value
+                    const whole = parseInt(wholeNumber);
+                    const fraction = parseInt(numerator) / parseInt(denominator);
+                    const totalValue = whole + fraction;
+                    
+                    tokens.push({ type: TOKEN_TYPES.NUMBER, value: totalValue });
                     continue;
                 }
                 
@@ -436,6 +488,40 @@
                     }
                     
                     tokens.push({ type: TOKEN_TYPES.NUMBER, value: totalInches });
+                    continue;
+                }
+                
+                // Handle standalone fractions like 1/2"
+                if (/[0-9]/.test(char) && i + 2 < input.length && input[i + 1] === '/' && /[0-9]/.test(input[i + 2])) {
+                    let numerator = '';
+                    // Get the numerator
+                    while (i < input.length && /[0-9]/.test(input[i])) {
+                        numerator += input[i++];
+                    }
+                    
+                    // Skip the / character
+                    if (input[i] === '/') {
+                        i++;
+                    } else {
+                        // This isn't a fraction, revert and try other patterns
+                        i -= numerator.length;
+                        continue;
+                    }
+                    
+                    // Get the denominator
+                    let denominator = '';
+                    while (i < input.length && /[0-9]/.test(input[i])) {
+                        denominator += input[i++];
+                    }
+                    
+                    // Skip the " character if present
+                    if (i < input.length && input[i] === '"') {
+                        i++;
+                    }
+                    
+                    // Convert the fraction to a decimal
+                    const decimal = parseInt(numerator) / parseInt(denominator);
+                    tokens.push({ type: TOKEN_TYPES.NUMBER, value: decimal });
                     continue;
                 }
                 
