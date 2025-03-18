@@ -37,31 +37,26 @@
         }
         
         .calculator-output {
-            width: 100%;
-            min-height: 100px;
-            padding: 15px;
-            font-size: 16px;
             background-color: #f9f9f9;
             border: 1px solid #ddd;
+            padding: 15px;
             border-radius: 5px;
-            box-sizing: border-box;
-            margin-top: 10px;
-            white-space: pre-wrap;
-            font-family: monospace;
+            margin-bottom: 15px;
+            min-height: 60px;
+            white-space: pre-line;
         }
         
         .instructions {
+            background-color: #f0f8ff;
+            border-left: 4px solid #4682b4;
+            padding: 10px 15px;
             margin-top: 20px;
-            padding: 15px;
-            background-color: #f0f7ff;
-            border-radius: 5px;
-            border-left: 4px solid #3498db;
         }
     </style>
 </head>
 <body>
     <div class="calculator-container">
-        <h1>Imperial Calculator</h1>
+        <h1>Imperial Measurement Calculator</h1>
         
         <input type="text" id="calculator-input" class="calculator-input" placeholder="Enter your calculation (e.g., 1' 2\" + 3' 4\")" autofocus>
         
@@ -74,7 +69,8 @@
                 <li>Feet: Use the apostrophe symbol (e.g., 5')</li>
                 <li>Inches: Use the quote symbol (e.g., 3")</li>
                 <li>Example: 1' 2" + 3' 4"</li>
-                <li>Supported operations: +, -, *, /</li>
+                <li>Example for Pythagorean theorem: sqrt((3' 4")^2 + (4' 0")^2)</li>
+                <li>Supported operations: +, -, *, /, ^ (power), sqrt (square root)</li>
             </ul>
         </div>
     </div>
@@ -90,6 +86,11 @@
             
             function calculateImperial(input) {
                 try {
+                    if (input.trim() === "") {
+                        outputField.textContent = "Results will appear here";
+                        return;
+                    }
+                    
                     // Replace imperial measurements with decimal representations
                     let processedInput = input.replace(/(\d+)'(?:\s*)?(\d+(?:\.\d+)?)?"/g, function(match, feet, inches) {
                         const feetValue = parseInt(feet);
@@ -102,6 +103,12 @@
                     
                     // Replace standalone inch values
                     processedInput = processedInput.replace(/(\d+)"/g, '$1');
+                    
+                    // Replace sqrt with Math.sqrt
+                    processedInput = processedInput.replace(/sqrt\(/g, 'Math.sqrt(');
+                    
+                    // Replace ^ with ** for exponentiation
+                    processedInput = processedInput.replace(/(\d+|\))\s*\^\s*(\d+)/g, '$1**$2');
                     
                     // Evaluate the expression
                     const totalInches = eval(processedInput);
@@ -125,13 +132,9 @@
                     }
                     
                     // Show detailed calculation
-                    outputField.textContent = `Input: ${input}\nProcessed: ${processedInput}\nTotal inches: ${totalInches}\nResult: ${result}`;
+                    outputField.textContent = `Result: ${result}\nTotal inches: ${Math.round(totalInches * 1000) / 1000}"\nCalculation: ${input}`;
                 } catch (error) {
-                    if (input.trim() === "") {
-                        outputField.textContent = "Results will appear here";
-                    } else {
-                        outputField.textContent = "Error in calculation. Please check your format.";
-                    }
+                    outputField.textContent = "Error in calculation. Please check your format.";
                 }
             }
         });
