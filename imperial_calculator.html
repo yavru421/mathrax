@@ -718,15 +718,14 @@
             let parsed = expression;
             const steps = [];
             
-            // First handle mixed numbers with & notation (e.g., "6&1/2 in" -> "6 + 1/2 in")
+            // First handle mixed numbers with & notation (e.g., "6&1/2in" -> "(6+1/2)")
             parsed = parsed.replace(/(\d+)\&(\d+)\/(\d+)\s*in/gi, function(match, whole, numerator, denominator) {
-                const replacement = `(${whole}+${numerator}/${denominator}) in`;
+                const replacement = `(${whole}+${numerator}/${denominator})`;
                 steps.push(`Replaced "${match}" with "${replacement}"`);
                 return replacement;
             });
             
-            // First, handle fractional inches within imperial measurements
-            // Pattern: X ft Y&Z/W in -> (X*12 + Y + Z/W)
+            // Handle compound measurements like "5ft 6&1/2in"
             parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\&(\d+)\/(\d+)\s*in/gi, function(match, feet, wholeInches, numerator, denominator) {
                 const replacement = `(${feet}*12 + ${wholeInches} + ${numerator}/${denominator})`;
                 steps.push(`Replaced "${match}" with "${replacement}"`);
@@ -747,16 +746,16 @@
                 return replacement;
             });
             
-            // Pattern: Z/W in -> (Z/W)
-            parsed = parsed.replace(/(\d+)\/(\d+)\s*in/gi, function(match, numerator, denominator) {
-                const replacement = `(${numerator}/${denominator})`;
+            // Replace "X ft Y in" pattern
+            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\s*in/gi, function(match, feet, inches) {
+                const replacement = `(${feet}*12 + ${inches})`;
                 steps.push(`Replaced "${match}" with "${replacement}"`);
                 return replacement;
             });
             
-            // Replace "X ft Y in" pattern
-            parsed = parsed.replace(/(\d+)\s*ft\s+(\d+)\s*in/gi, function(match, feet, inches) {
-                const replacement = `(${feet}*12+${inches})`;
+            // Pattern: Z/W in -> (Z/W)
+            parsed = parsed.replace(/(\d+)\/(\d+)\s*in/gi, function(match, numerator, denominator) {
+                const replacement = `(${numerator}/${denominator})`;
                 steps.push(`Replaced "${match}" with "${replacement}"`);
                 return replacement;
             });
@@ -789,10 +788,19 @@
                 return replacement;
             });
             
+            // Remove any remaining 'in' text that might have been missed
+            parsed = parsed.replace(/\bin\b/gi, '');
+            
             // Add each step to the steps display if requested
             if (addSteps) {
                 steps.forEach(step => addStep(step));
             }
+            
+            // Clean up any duplicate or unnecessary parentheses and spaces between numbers
+            parsed = parsed.replace(/\)\s*\(/g, ')*(');
+            parsed = parsed.replace(/\s+/g, ' ');
+            
+            addStep(`Final parsed expression: ${parsed}`);
             
             return parsed;
         }
