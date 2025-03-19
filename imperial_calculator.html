@@ -73,7 +73,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: var(--accent);
+            color: var (--accent);
         }
         
         input, select {
@@ -191,7 +191,7 @@
     <div class="calculator">
         <div class="expression-container">
             <label for="expression">Expression</label>
-            <textarea id="expression" placeholder="Enter calculations like: 5'6 + 3&1/2 or 2'6 - 1/4"></textarea>
+            <textarea id="expression" placeholder="Enter calculations like: 5ft6 + 3ft6in or 2ft6 - 1in"></textarea>
         </div>
         
         <div class="operations">
@@ -275,7 +275,7 @@
             let result = "";
             
             if (feet > 0) {
-                result += `${feet}'`;
+                result += `${feet}ft`;
                 
                 if (wholeInches > 0 || fractionInches > 0) {
                     result += " ";
@@ -284,14 +284,14 @@
             
             if (wholeInches > 0 || fractionInches > 0) {
                 if (fractionInches === 0) {
-                    result += `${wholeInches}"`;
+                    result += `${wholeInches}in`;
                 } else {
                     const fractionStr = toFraction(fractionInches);
                     
                     if (wholeInches === 0) {
-                        result += `${fractionStr}"`;
+                        result += `${fractionStr}in`;
                     } else {
-                        result += `${wholeInches}&${fractionStr}"`;
+                        result += `${wholeInches}&${fractionStr}in`;
                     }
                 }
             }
@@ -323,7 +323,7 @@
                     continue;
                 }
                 
-                // Handle measurements with & format like 6&1/2"
+                // Handle measurements with & format like 6&1/2in
                 if (/[0-9]/.test(char) && i + 2 < input.length && input[i + 1] === '&') {
                     let wholeNumber = '';
                     // Get the whole number part
@@ -361,9 +361,9 @@
                         denominator += input[i++];
                     }
                     
-                    // Skip the " character if present
-                    if (i < input.length && input[i] === '"') {
-                        i++;
+                    // Skip the in character if present
+                    if (i < input.length && input[i] === 'i' && input[i + 1] === 'n') {
+                        i += 2;
                     }
                     
                     // Convert to number value
@@ -375,17 +375,17 @@
                     continue;
                 }
                 
-                // Handle measurements like 5'6" or 5' 6" or 5'6 1/2"
-                if (/[0-9]/.test(char) && i + 1 < input.length && input[i + 1] === "'") {
+                // Handle measurements like 5ft6in or 5ft 6in or 5ft6 1/2in
+                if (/[0-9]/.test(char) && i + 2 < input.length && input[i + 1] === 'f' && input[i + 2] === 't') {
                     let measurementStr = '';
                     let inchesFound = false;
                     
                     // Collect the entire measurement string
                     while (i < input.length &&
-                        ((/[0-9'"\s\/&]/.test(input[i])) ||
+                        ((/[0-9ftin\s\/&]/.test(input[i])) ||
                             (input[i] === " " && !inchesFound))) {
                         measurementStr += input[i];
-                        if (input[i] === '"') inchesFound = true;
+                        if (input[i] === 'i' && input[i + 1] === 'n') inchesFound = true;
                     i++;
                 }
 
@@ -393,25 +393,25 @@
                 let totalInches = 0;
 
                 // Extract feet
-                const feetMatch = measurementStr.match(/(\d+)'/);
+                const feetMatch = measurementStr.match(/(\d+)ft/);
                 if (feetMatch) {
                     totalInches += parseInt(feetMatch[1]) * 12;
                 }
 
                 // Extract inches with fraction
-                const inchesMatch = measurementStr.match(/(\d+)\s*&?\s*(\d+)\/(\d+)"/);
+                const inchesMatch = measurementStr.match(/(\d+)\s*&?\s*(\d+)\/(\d+)in/);
                 if (inchesMatch) {
                     totalInches += parseInt(inchesMatch[1]);
                     totalInches += parseInt(inchesMatch[2]) / parseInt(inchesMatch[3]);
                 } else {
                     // Extract just inches
-                    const justInchesMatch = measurementStr.match(/(\d+)"/);
+                    const justInchesMatch = measurementStr.match(/(\d+)in/);
                     if (justInchesMatch) {
                         totalInches += parseInt(justInchesMatch[1]);
                     }
 
                     // Extract just fraction inches
-                    const justFractionMatch = measurementStr.match(/(\d+)\/(\d+)"/);
+                    const justFractionMatch = measurementStr.match(/(\d+)\/(\d+)in/);
                     if (justFractionMatch) {
                         totalInches += parseInt(justFractionMatch[1]) / parseInt(justFractionMatch[2]);
                     }
@@ -421,7 +421,7 @@
                 continue;
             }
 
-            // Handle standalone fractions like 1/2"
+            // Handle standalone fractions like 1/2in
             if (/[0-9]/.test(char) && i + 2 < input.length && input[i + 1] === '/' && /[0-9]/.test(input[i + 2])) {
                 let numerator = '';
                 // Get the numerator
@@ -444,9 +444,9 @@
                     denominator += input[i++];
                 }
 
-                // Skip the " character if present
-                if (i < input.length && input[i] === '"') {
-                    i++;
+                // Skip the in character if present
+                if (i < input.length && input[i] === 'i' && input[i + 1] === 'n') {
+                    i += 2;
                 }
 
                 // Convert the fraction to a decimal
@@ -614,82 +614,3 @@
             inputHistory.unshift(text);
             historyIndex = -1; // Reset index when a new calculation is added
         }
-        if (inputHistory.length > 20) {
-            inputHistory.pop();
-        }
-    }
-
-    function saveHistory() {
-        localStorage.setItem("inputHistory", JSON.stringify(inputHistory));
-    }
-
-    function loadHistory() {
-        const storedHistory = localStorage.getItem("inputHistory");
-        inputHistory = storedHistory ? JSON.parse(storedHistory) : [];
-    }
-
-    function recallHistory(direction) {
-        if (inputHistory.length === 0) return;
-
-        if (direction === 'up') {
-            historyIndex = Math.min(historyIndex + 1, inputHistory.length - 1);
-        } else if (direction === 'down') {
-            historyIndex = Math.max(historyIndex - 1, -1);
-        }
-
-        const expressionInput = document.getElementById("expression");
-        if (historyIndex === -1) {
-            expressionInput.value = ""; // Clear input
-        } else {
-            expressionInput.value = inputHistory[historyIndex];
-        }
-    }
-
-    // Clear history button function
-    function clearInputHistory() {
-        inputHistory = [];
-        historyIndex = -1;
-        localStorage.removeItem("inputHistory");
-        document.getElementById("expression").value = ""; // Clear input field
-    }
-
-    // Event listeners
-    document.addEventListener("DOMContentLoaded", () => {
-        // Load history
-        loadHistory();
-
-        // Calculate button
-        document.getElementById("calculate-btn").addEventListener("click", calculateExpression);
-
-        // Clear button
-        document.getElementById("clear-btn").addEventListener("click", () => {
-            document.getElementById("expression").value = "";
-            document.getElementById("result").textContent = "Result will appear here";
-        });
-
-        // Backspace button
-        document.getElementById("backspace-btn").addEventListener("click", () => {
-            const expressionInput = document.getElementById("expression");
-            expressionInput.value = expressionInput.value.slice(0, -1);
-        });
-
-        // Clear history button
-        document.getElementById("clear-history").addEventListener("click", clearInputHistory);
-
-        // Allow Enter key to calculate
-        document.getElementById("expression").addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                calculateExpression();
-            } else if (event.key === "ArrowUp") {
-                event.preventDefault();
-                recallHistory('up');
-            } else if (event.key === "ArrowDown") {
-                event.preventDefault();
-                recallHistory('down');
-            }
-        });
-    });
-    </script>
-</body>
-</html>
