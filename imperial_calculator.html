@@ -616,10 +616,10 @@
         }
         
         function calculate() {
-            const input = document.getElementById('feet-inches-input');
+            const input = document.getElementById('feet-inches-input').value;
             const result = document.getElementById('feet-inches-result');
             
-            if (!input.value.trim()) {
+            if (!input.trim()) {
                 result.textContent = 'Please enter an expression';
                 clearSteps();
                 addStep("Please enter an expression");
@@ -627,40 +627,42 @@
             }
             
             try {
-                // Show loading state
-                result.classList.add('loading');
-                
-                // Clear previous steps
                 clearSteps();
+                addStep(`Original expression: ${input}`);
                 
-                // Add initial expression
-                addStep(`Original expression: ${input.value}`);
+                // Convert expression to pure math
+                let converted = input;
+                converted = converted.replace(/(\d+)\s*ft\s+(\d+)\&(\d+)\/(\d+)\s*in/gi, '($1*12 + $2 + $3/$4)');
+                converted = converted.replace(/(\d+)\s*ft\s+(\d+)\/(\d+)\s*in/gi, '($1*12 + $2/$3)');
+                converted = converted.replace(/(\d+)\s*ft\s+(\d+)\s*in/gi, '($1*12 + $2)');
+                converted = converted.replace(/(\d+)\&(\d+)\/(\d+)\s*in/gi, '($1 + $2/$3)');
+                converted = converted.replace(/(\d+)\/(\d+)\s*in/gi, '($1/$2)');
+                converted = converted.replace(/(\d+)\s*ft/gi, '($1*12)');
+                converted = converted.replace(/(\d+)\s*in/gi, '$1');
                 
-                // Process the expression
-                const parsedExpression = parseImperialExpression(input.value);
-                addStep(`Converted to inches: ${parsedExpression}`);
+                addStep(`Converted to calculation: ${converted}`);
                 
-                // Evaluate the mathematical expression
-                const resultInches = evaluateMathExpression(parsedExpression);
-                addStep(`Evaluated result in inches: ${resultInches}`);
+                // Evaluate the expression
+                const totalInches = eval(converted);
+                addStep(`Total inches: ${totalInches}`);
                 
-                // Convert the result back to feet and inches format
-                const formattedResult = formatImperialResult(resultInches);
-                addStep(`Formatted result: ${formattedResult}`, true);
+                // Convert back to feet and inches
+                const feet = Math.floor(totalInches / 12);
+                const inches = totalInches % 12;
                 
-                // Display result
-                result.textContent = formattedResult;
+                let formatted;
+                if (feet > 0) {
+                    formatted = `${feet}ft ${inches}in`;
+                } else {
+                    formatted = `${inches}in`;
+                }
                 
-                // Add to history
-                addToHistory(input.value, formattedResult, 'feet-inches-history');
+                result.textContent = formatted;
+                addStep(`Final result: ${formatted}`, true);
                 
             } catch (error) {
-                console.error('Calculation error:', error);
-                result.textContent = `Error: ${error.message}`;
-                result.classList.add('shake');
-                addStep(`Error: ${error.message}`);
-            } finally {
-                result.classList.remove('loading');
+                result.textContent = 'Error: Invalid expression';
+                addStep('Error: Invalid expression');
             }
         }
         
@@ -1661,44 +1663,42 @@
             
             if (!equation) {
                 result.textContent = 'Please enter an equation';
-                clearSteps();
-                addStep("Please enter an equation");
                 return;
             }
             
             try {
                 clearSteps();
-                addStep(`Original equation: ${equation}`);
+                addStep(`Solving: ${equation} for ${variable}`);
                 
-                if (!equation.includes('=')) {
-                    throw new Error("Equation must contain an equals sign (=)");
+                const [left, right] = equation.split('=').map(s => s.trim());
+                if (!left || !right) {
+                    throw new Error('Invalid equation format');
                 }
                 
-                const [leftSide, rightSide] = equation.split('=').map(side => side.trim());
-                const rearrangedEquation = `(${leftSide})-(${rightSide})`;
+                // Move everything to left side
+                const rearranged = `${left}-(${right})`;
                 
-                // Evaluate coefficient and constant terms
-                const withVariable = rearrangedEquation.replace(new RegExp(variable, 'g'), '(x)');
-                const withOne = withVariable.replace(/\(x\)/g, '1');
-                const withZero = withVariable.replace(/\(x\)/g, '0');
+                // Get coefficient by substituting 1 and 0
+                const withOne = rearranged.replace(new RegExp(variable, 'g'), '1');
+                const withZero = rearranged.replace(new RegExp(variable, 'g'), '0');
                 
-                const coefficient = evaluateMathExpression(withOne) - evaluateMathExpression(withZero);
-                const constant = evaluateMathExpression(withZero);
+                const coefficient = eval(withOne) - eval(withZero);
+                const constant = -eval(withZero);
                 
                 if (coefficient === 0) {
                     if (constant === 0) {
-                        result.textContent = `${variable} = Any value (infinite solutions)`;
+                        result.textContent = 'Infinite solutions';
                     } else {
-                        result.textContent = "No solution exists";
+                        result.textContent = 'No solution';
                     }
                 } else {
-                    const solution = -constant / coefficient;
+                    const solution = constant / coefficient;
                     result.textContent = `${variable} = ${solution}`;
+                    addStep(`${variable} = ${solution}`, true);
                 }
-                
             } catch (error) {
-                result.textContent = `Error: ${error.message}`;
-                addStep(`Error: ${error.message}`);
+                result.textContent = 'Error: Invalid equation';
+                addStep('Error: Invalid equation');
             }
         }
     </script>
