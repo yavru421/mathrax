@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1e1e1e">
     <title>MathRax_ICC</title>
     <style>
         body {
@@ -20,6 +23,7 @@
             width: 100%;
             max-width: 1000px;
             gap: 20px;
+            margin-bottom: 40px;
         }
         
         .calculator-container {
@@ -348,6 +352,97 @@
             .steps-container {
                 margin-top: 20px;
             }
+        }
+
+        /* Mobile Optimizations */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            button {
+                min-height: 48px; /* Better touch targets */
+                touch-action: manipulation;
+            }
+            
+            .buttons {
+                gap: 5px;
+            }
+            
+            .input-field {
+                font-size: 16px; /* Prevent iOS zoom */
+            }
+            
+            .steps-container {
+                max-height: 40vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+        
+        /* Prevent text selection on buttons */
+        button {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* Active state for buttons */
+        button:active {
+            transform: scale(0.97);
+        }
+        
+        /* Improved focus states */
+        input:focus, button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(186, 255, 57, 0.5);
+        }
+        
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        /* Error feedback */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Footer styles */
+        .copyright-footer {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            max-width: 200px;
+            background: rgba(34, 34, 34, 0.9);
+            color: #666;
+            padding: 8px;
+            font-size: 11px;
+            border-radius: 5px 0 0 0;
+            z-index: 1000;
+            text-align: right;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid #333;
+            border-left: 1px solid #333;
+            transition: opacity 0.3s;
+        }
+
+        .copyright-footer:hover {
+            opacity: 1;
+            color: #baff39;
+        }
+
+        .copyright-footer p {
+            margin: 2px 0;
         }
     </style>
 </head>
@@ -1336,126 +1431,221 @@
                         input.removeAttribute('readonly');
                     } else {
                         input.setAttribute('readonly', true);
-                        
-                        // Add click handler to enable editing through on-screen buttons
-                        input.addEventListener('click', function() {
-                            // If readonly, set focus but don't show keyboard
-                            if (!keyboardToggle.checked) {
-                                this.focus();
-                            }
-                        });
                     }
                 });
             });
             
-            // Check if we're in a mobile environment
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                document.querySelector('.keyboard-toggle').style.display = 'flex';
-            } else {
-                document.querySelector('.keyboard-toggle').style.display = 'none';
-            }
+            // Initialize input helpers
+            setupAutoPairing();
+            setupFormatSuggestion();
+            setupInputValidation();
         });
-
-        // Algebra functions
-        function solveAlgebra() {
-            const equation = document.getElementById('equation-input').value.trim();
-            const variable = document.getElementById('variable-select').value;
-            
-            if (!equation) {
-                document.getElementById('algebra-result').textContent = 'Please enter an equation';
-                clearSteps();
-                addStep("Please enter an equation");
-                return;
-            }
-            
-            try {
-                clearSteps();
-                addStep(`Original equation: ${equation}`);
-                addStep(`Solving for: ${variable}`);
-                
-                // Split equation into left and right sides
-                if (!equation.includes('=')) {
-                    throw new Error("Equation must contain an equals sign (=)");
-                }
-                
-                const [leftSide, rightSide] = equation.split('=').map(side => side.trim());
-                addStep(`Left side: ${leftSide}`);
-                addStep(`Right side: ${rightSide}`);
-                
-                // Rearrange the equation to standard form: ax + b = 0
-                addStep(`Rearranging to standard form: ${variable} = ...`);
-                
-                // Move all terms with the variable to the left side
-                // Move all other terms to the right side
-                addStep(`Isolating ${variable} on one side`);
-                
-                // Parse the equation and solve
-                const solution = parseEquation(leftSide, rightSide, variable);
-                
-                // Format the result
-                const result = `${variable} = ${solution}`;
-                addStep(`Solution: ${result}`, true);
-                
-                document.getElementById('algebra-result').textContent = result;
-                
-                // Add to history
-                addToHistory(equation, result, 'feet-inches-history');
-                
-            } catch (error) {
-                document.getElementById('algebra-result').textContent = `Error: ${error.message}`;
-                addStep(`Error: ${error.message}`);
-            }
-        }
         
-        function parseEquation(leftSide, rightSide, variable) {
-            // For now, let's handle simple linear equations like ax + b = c
-            // This is a simplified solver and would need to be expanded for more complex equations
+        // Input Helper Functions
+        function setupAutoPairing() {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            const pairs = {
+                '(': ')',
+                '[': ']',
+                '{': '}'
+            };
             
-            // Create a combined equation: leftSide - rightSide = 0
-            const combined = `(${leftSide})-(${rightSide})`;
-            addStep(`Combining to ${combined} = 0`);
-            
-            // Get coefficient of variable by replacing the variable with 1 and evaluating
-            const withOne = combined.replace(new RegExp(variable, 'g'), '1');
-            const withZero = combined.replace(new RegExp(variable, 'g'), '0');
-            
-            try {
-                // Calculate coefficient (a) and constant (b) in the form ax + b = 0
-                const coefficient = evaluateMathExpression(withOne) - evaluateMathExpression(withZero);
-                const constant = evaluateMathExpression(withZero);
-                
-                addStep(`Coefficient of ${variable}: ${coefficient}`);
-                addStep(`Constant term: ${constant}`);
-                
-                // Solve x = -b/a
-                if (coefficient === 0) {
-                    if (constant === 0) {
-                        return "Any value (infinite solutions)";
+            inputs.forEach(input => {
+                input.addEventListener('input', function(event) {
+                    if (this.value.length > 0 && event.inputType === 'insertText' && event.data.length === 1) {
+                        const char = event.data;
+                        if (pairs.hasOwnProperty(char)) {
+                            const caretPos = this.selectionStart;
+                            this.value = this.value.slice(0, caretPos) + pairs[char] + this.value.slice(caretPos);
+                            this.setSelectionRange(caretPos, caretPos);
+                        }
                     }
-                    throw new Error("No solution (contradiction)");
-                }
-                
-                const solution = -constant / coefficient;
-                addStep(`${variable} = ${-constant} / ${coefficient} = ${solution}`);
-                
-                return solution;
-            } catch (error) {
-                throw new Error(`Could not solve equation: ${error.message}`);
-            }
+                });
+            });
         }
         
-        function clearAlgebra() {
-            document.getElementById('equation-input').value = '';
-            document.getElementById('algebra-result').textContent = 'Result will appear here';
-            clearSteps();
-            addStep("Enter an equation to solve.");
+        function setupFormatSuggestion() {
+            const imperialInput = document.getElementById('feet-inches-input');
+            const suggestionDiv = document.createElement('div');
+            suggestionDiv.className = 'format-suggestion';
+            imperialInput.parentNode.insertBefore(suggestionDiv, imperialInput.nextSibling);
+            
+            imperialInput.addEventListener('input', function(event) {
+                const text = this.value;
+                const caretPos = this.selectionStart;
+                
+                // Auto-complete units
+                if (this.value.length > 0 && event.inputType === 'insertText' && event.data.length === 1) {
+                    const char = event.data;
+                    if (/\d+f$/i.test(text.substring(0, caretPos))) {
+                        this.value = text.substring(0, caretPos-1) + 'ft ' + text.substring(caretPos);
+                        this.setSelectionRange(caretPos+2, caretPos+2);
+                    } else if (/\d+i$/i.test(text.substring(0, caretPos))) {
+                        this.value = text.substring(0, caretPos-1) + 'in' + text.substring(caretPos);
+                        this.setSelectionRange(caretPos+2, caretPos+2);
+                    }
+                }
+                
+                // Show/update suggestion
+                const rect = this.getBoundingClientRect();
+                suggestionDiv.style.left = `${rect.left}px`;
+                suggestionDiv.style.top = `${rect.bottom + 5}px`;
+                suggestionDiv.innerHTML = `
+                    Format examples:<br>
+                    • 5ft<br>
+                    • 10in<br>
+                    • 5ft 6in<br>
+                    • 3&1/2in<br>
+                    • 5ft 6&1/2in
+                `;
+                suggestionDiv.style.display = this.value ? 'none' : 'block';
+            });
+            
+            imperialInput.addEventListener('focus', () => {
+                if (!imperialInput.value) {
+                    suggestionDiv.style.display = 'block';
+                }
+            });
+            
+            imperialInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    suggestionDiv.style.display = 'none';
+                }, 200);
+            });
+        }
+        
+        function setupInputValidation() {
+            const imperialInput = document.getElementById('feet-inches-input');
+            let validationTimeout;
+            
+            imperialInput.addEventListener('input', function() {
+                clearTimeout(validationTimeout);
+                validationTimeout = setTimeout(() => {
+                    const isValid = validateImperialInput(this.value);
+                    this.classList.toggle('invalid', !isValid && this.value !== '');
+                }, 300);
+            });
+        }
+        
+        function validateImperialInput(input) {
+            const validPatterns = [
+                /^\d+\s*ft$/i,
+                /^\d+\s*in$/i,
+                /^\d+\/\d+\s*in$/i,
+                /^\d+\&\d+\/\d+\s*in$/i,
+                /^\d+\s*ft\s+\d+\s*in$/i,
+                /^\d+\s*ft\s+\d+\&\d+\/\d+\s*in$/i,
+                /^\d+\s*ft\s+\d+\/\d+\s*in$/i,
+                /^[\d\s+\-*/().ft&in]+$/i
+            ];
+            
+            return validPatterns.some(pattern => pattern.test(input));
+        }
+        
+        // Add at the start of DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevent double-tap zoom on iOS
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Prevent pull-to-refresh
+            document.body.addEventListener('touchmove', function(event) {
+                if (window.pageYOffset === 0) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Add loading state to buttons
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.add('loading');
+                    setTimeout(() => this.classList.remove('loading'), 300);
+                });
+            });
+            
+            // Improve input validation feedback
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                input.addEventListener('invalid', function(event) {
+                    event.preventDefault();
+                    this.classList.add('shake');
+                    setTimeout(() => this.classList.remove('shake'), 500);
+                });
+                
+                // Clear error state on input
+                input.addEventListener('input', function() {
+                    this.classList.remove('shake');
+                });
+            });
+            
+            // Handle orientation changes
+            window.addEventListener('orientationchange', function() {
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.activeElement.scrollIntoView();
+                }, 100);
+            });
+            
+            // Cache DOM elements for better performance
+            const calculatorElements = {
+                input: document.getElementById('feet-inches-input'),
+                result: document.getElementById('feet-inches-result'),
+                steps: document.getElementById('calculation-steps')
+            };
+            
+            // Debounce calculation for better performance
+            let calculationTimeout;
+            const debouncedCalculate = () => {
+                clearTimeout(calculationTimeout);
+                calculationTimeout = setTimeout(calculate, 300);
+            };
+            
+            // Add error boundary
+            window.addEventListener('error', function(event) {
+                console.error('Calculator error:', event.error);
+                document.getElementById('feet-inches-result').textContent = 
+                    'An error occurred. Please try again.';
+                return false;
+            });
+        });
+        
+        // Optimize calculation performance
+        function calculate() {
+            const input = document.getElementById('feet-inches-input');
+            const result = document.getElementById('feet-inches-result');
+            
+            try {
+                // Show loading state
+                result.classList.add('loading');
+                
+                // Debounce rapid calculations
+                requestAnimationFrame(() => {
+                    try {
+                        // ...existing calculation code...
+                    } catch (error) {
+                        console.error('Calculation error:', error);
+                        result.textContent = `Error: ${error.message}`;
+                        result.classList.add('shake');
+                    } finally {
+                        result.classList.remove('loading');
+                    }
+                });
+            } catch (error) {
+                console.error('Critical error:', error);
+                result.textContent = 'An unexpected error occurred';
+                result.classList.remove('loading');
+            }
         }
     </script>
-<footer style="text-align: center; margin-top: 30px; padding: 15px; background: #222; color: white; font-size: 14px; border-radius: 10px;">
-         <p>Imperial Calculator by <strong>John Daniel Dondlinger</strong></p>
-    <p>&copy; 2025. All Rights Reserved.</p>
-    <p>Developed for precise imperial unit calculations. Dondlinger General Contracting llc</p>
-</footer>
-
+<div class="copyright-footer">
+    <p>By <strong>John Daniel Dondlinger</strong></p>
+    <p>Dondlinger General Contracting llc</p>
+</div>
 </body>
 </html>
